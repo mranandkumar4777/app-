@@ -2,7 +2,7 @@ name: Build Android APK
 
 on:
   push:
-    branches: [main, master]
+    branches: [ main, master ]
   workflow_dispatch:
 
 permissions:
@@ -19,11 +19,7 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - uses: android-actions/setup-android@v3
-
       - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.7'
 
       - name: Build debug APK
         working-directory: phone-app-android
@@ -32,17 +28,8 @@ jobs:
       - name: Name the APK
         run: cp phone-app-android/app/build/outputs/apk/debug/app-debug.apk PresenterRemote.apk
 
-      # Download from the run page (Actions tab -> the run -> Artifacts)
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
-          name: PresenterRemote-apk
+          name: PresenterRemote-APK
           path: PresenterRemote.apk
-
-      # Also publish it to a Release so you can open the repo's Releases page
-      # on your phone and tap the APK to install it.
-      - uses: softprops/action-gh-release@v2
-        with:
-          tag_name: latest
-          name: Presenter Remote (latest)
-          body: Install PresenterRemote.apk on your Android phone.
-          files: PresenterRemote.apk
